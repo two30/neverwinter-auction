@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neverwinter Auction House Category Finder</title>
+<style>
+td {border: thin dotted black;}
+td.nowrap {white-space: nowrap;}
+td.legendary {border: medium ridge #f27900;}
+td.epic {border: medium ridge #7a38ff;}
+td.rare {border: medium ridge #3391e9;}
+td.uncommon {border: medium ridge #84dc26;}
+td.common {border: medium ridge #ffffff;}
+td.junk {border: medium ridge #999999;}
+td.quest {border: medium ridge #c7ac00;}
+a {text-decoration: none;}
+a:hover {text-decoration: underline;}
+</style>
+</head>
+<body>
+Search: <input type="text" id="search" oninput="update()"><br>
+<table id="table">
+  <tr>
+    <th>Item</th>
+    <th>Category</th>
+  </tr>
+</table>
+
+<script>
+var items = [
+    {itemName: "10 Mechanical Altars", quality: "common", category: "Consumables - Utility Packs"},
+    {itemName: "5 Expendable Doohickies", quality: "uncommon", category: "Consumables - Utility Packs"},
+    {itemName: "Abyssal Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Adventurer's Helper Pack", quality: "rare", category: "Consumables - Utility Packs"},
+    {itemName: "Air-Aspected Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Air Seeker's Wand", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Alchemy Special Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Archaeologist's Trowel Box", quality: "uncommon", category: "Refinement - Packs"},
+    {itemName: "Armored Griffon Mount Pack", quality: "legendary", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Artisan's Professions Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Ashmadai Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Auril's Companion Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Bag of Protector's Figurines", quality: "rare", category: "Consumables - Utility Packs"},
+    {itemName: "Battlefield Medic's Ensemble", quality: "rare", category: "Fashion - Fashion Packs"},
+    {itemName: "Benign Order of the Third Eye Documents", quality: "junk", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Blackdagger Crypt Key", quality: "junk", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Black Ice Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Black Ice Master Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Black Ice Shaping Special Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Blacksmith Crafting Wear", quality: "rare", category: "Fashion - Fashion Packs"},
+    {itemName: "Blessed Professions Elemental Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Breyer's Draconic Investigations", quality: "rare", category: "Miscellaneous - Treasure"},
+    {itemName: "Bronze Skeleton Key", quality: "junk", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Building Materials", quality: "quest", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Cask of Wonders", quality: "epic", category: "Refinement - Packs"},
+    {itemName: "Chasm Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Codex of Companion Experience", quality: "uncommon", category: "Consumables - Utility Packs"},
+    {itemName: "Coffer of Enchantments", quality: "uncommon", category: "Refinement - Packs"},
+    {itemName: "Companion Augmentation Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Companion Defense Boost", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Companion Ferocity Potion", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Companion Fortification Kit", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Companion Idle Slot Pack", quality: "uncommon", category: "Consumables - Utility Packs"},
+    {itemName: "Companion Maximum HP Boost", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Corrupted Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Courtesan Wear", quality: "rare", category: "Fashion - Fashion Packs"},
+    {itemName: "Creations of Wonder Pack", quality: "epic", category: "Consumables - Utility Packs"},
+    {itemName: "Cube of Augmentation", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Dark Cache of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Dark Forest Equipment Arsenal", quality: "rare", category: "Equipment - Equipment Packs"},
+    {itemName: "Dated Companion Fortification Kit", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Defense Supplies", quality: "uncommon", category: "Miscellaneous - Treasure"},
+    {itemName: "Demonic Enchantment Cache", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Dispersal Agent", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Draconic Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Dragon Bone", quality: "epic", category: "Miscellaneous - Treasure"},
+    {itemName: "Dragon Forged Steel", quality: "epic", category: "Miscellaneous - Treasure"},
+    {itemName: "Dragon Gem", quality: "epic", category: "Miscellaneous - Treasure"},
+    {itemName: "Dragon Hoard Coffer", quality: "quest", category: "Miscellaneous - Treasure"},
+    {itemName: "Dragon Hoard Coin Pouch", quality: "uncommon", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Dread Ring Treasure Cache", quality: "rare", category: "Equipment - Equipment Packs"},
+    {itemName: "Drow Hunting Tips", quality: "rare", category: "Miscellaneous - Treasure"},
+    {itemName: "Dusk Boots Pack", quality: "epic", category: "Equipment - Equipment Packs"},
+    {itemName: "Dwarven Spelunking", quality: "rare", category: "Miscellaneous - Treasure"},
+    {itemName: "Earth-Aspected Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Earth Seeker's Wand", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Ebon Downs Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Elemental Air Sealed Container", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Elemental Earth Sealed Container", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Elemental Fire Sealed Container", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Elemental Water Sealed Container", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Elminster's Lunchbox", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Ensorcelled Arsenal", quality: "epic", category: "Equipment - Equipment Packs"},
+    {itemName: "Epic Dungeon Chest Key", quality: "quest", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Favor of Tymora", quality: "uncommon", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Fire-Aspected Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Firemane Companion Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Fire Seeker's Wand", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Flame Sprite Bundle", quality: "epic", category: "Companions - Packs"},
+    {itemName: "Frostborn Gloves Pack", quality: "epic", category: "Equipment - Equipment Packs"},
+    {itemName: "Frostborn Headwear Pack", quality: "epic", category: "Equipment - Equipment Packs"},
+    {itemName: "Genie's Dusky Footwear Pack", quality: "epic", category: "Equipment - Equipment Packs"},
+    {itemName: "Genie's Gift", quality: "rare", category: "Miscellaneous - Treasure"},
+    {itemName: "Glorious Resurgence Artifact Provisions", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Glorious Resurgence Enchantments Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Glorious Resurgence Epic Artifacts Pack", quality: "epic", category: "Refinement - Packs"},
+    {itemName: "Glorious Resurgence Epic Companions Pack", quality: "epic", category: "Refinement - Packs"},
+    {itemName: "Glorious Resurgence Legendary Pack", quality: "legendary", category: "Refinement - Packs"},
+    {itemName: "Glory Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Golden Lion Insignia Pack", quality: "legendary", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Grazilaxx's Artifact Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Greater Companion Experience Treatise", quality: "epic", category: "Consumables - Utility Packs"},
+    {itemName: "Haarl's Treatise on Dragonkind", quality: "rare", category: "Miscellaneous - Treasure"},
+    {itemName: "Icebound Artifact Weapon Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Icespire Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Icewind Dale Treasure Cache", quality: "rare", category: "Equipment - Equipment Packs"},
+    {itemName: "Incantations of the Dragon Queen", quality: "rare", category: "Miscellaneous - Treasure"},
+    {itemName: "Injured Survivor's Outfit", quality: "rare", category: "Fashion - Fashion Packs"},
+    {itemName: "Inscribed Enchantment Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Iron Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Jarl's Mount Pack", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Jester's Motley", quality: "rare", category: "Fashion - Fashion Packs"},
+    {itemName: "Jewelcrafting Special Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Kenku Archer Bundle", quality: "epic", category: "Companions - Packs"},
+    {itemName: "Lanolin", quality: "uncommon", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Lesser Companion Defense Boost", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Lesser Companion Experience Treatise", quality: "uncommon", category: "Consumables - Utility Packs"},
+    {itemName: "Lesser Companion Ferocity Potion", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Lesser Companion Power Boost", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Magnificent Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Major Astral Diamonds Voucher", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Major Dark Gifts Voucher", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Major Fey Trinket Voucher", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Major Frozen Treasures Voucher", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Major Influence Voucher", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Major Labor Voucher", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Major Surplus Equipment Voucher", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Major Treasures of Tyranny Voucher", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Many-Arrows Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Master's Trowel Box", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Mysterious Chicken Egg", quality: "epic", category: "Companions - Packs"},
+    {itemName: "Mysterious Fortune", quality: "junk", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Mysterious Void Locket", quality: "epic", category: "Companions - Packs"},
+    {itemName: "Neverdeath Treasure Cache", quality: "uncommon", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Nobanion's Artifact Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Noble Finery", quality: "rare", category: "Fashion - Fashion Packs"},
+    {itemName: "Northern Animal Fat", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Ogrémoch's Artifact Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Olhydra's Artifact Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "On Madness", quality: "rare", category: "Miscellaneous - Treasure"},
+    {itemName: "Ostorian Relic Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Ostorian Relics", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Pirate Skyhold Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Priceless Thayan Antiquity", quality: "uncommon", category: "Miscellaneous - Treasure"},
+    {itemName: "Professional Fireworks", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Professions Master Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Professions Special Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Rare Mount Pack", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Refiner's Cache", quality: "epic", category: "Refinement - Packs"},
+    {itemName: "Regal Stronghold Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Reghed Barbarian Relic", quality: "rare", category: "Miscellaneous - Treasure"},
+    {itemName: "Relic of the Dragon Empire", quality: "rare", category: "Miscellaneous - Treasure"},
+    {itemName: "Rider's Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Salve of Vitality", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Set of Dice", quality: "junk", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Sharandar Treasure Cache", quality: "rare", category: "Equipment - Equipment Packs"},
+    {itemName: "Shaundakul's Artifact Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Smouldering Satchel", quality: "uncommon", category: "Professions - Profession Packs"},
+    {itemName: "Standard Dungeon Chest Key", quality: "quest", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Strongbox Key", quality: "epic", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Stronghold Chest of Campaigns", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Stronghold Chest of Power", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Stronghold Starter Pack", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Stronghold Support Reward", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Sword Coast Potion Pouch", quality: "common", category: "Consumables - Utility Packs"},
+    {itemName: "Sword Coast Profession Bag", quality: "uncommon", category: "Professions - Profession Packs"},
+    {itemName: "Sword Coast Refinement Pouch", quality: "common", category: "Refinement - Packs"},
+    {itemName: "Sword Coast Refinement Sack", quality: "uncommon", category: "Refinement - Packs"},
+    {itemName: "Sword Coast Refinement Satchel", quality: "uncommon", category: "Refinement - Packs"},
+    {itemName: "Temple of the Spider Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Thayan Patrician's Regalia", quality: "rare", category: "Fashion - Fashion Packs"},
+    {itemName: "Thayan Relic Fragment", quality: "uncommon", category: "Miscellaneous - Treasure"},
+    {itemName: "Tome of Companion Experience", quality: "uncommon", category: "Consumables - Utility Packs"},
+    {itemName: "Turmian Merchant's Garb", quality: "rare", category: "Fashion - Fashion Packs"},
+    {itemName: "Twisted Dwarf Scroll Case", quality: "epic", category: "Companions - Packs"},
+    {itemName: "Vellosk Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Wanderer's Artifact Weapon Pack", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Water-Aspected Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
+    {itemName: "Water Seeker's Wand", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Weaponsmith and Artificer Pack", quality: "rare", category: "Professions - Profession Packs"},
+    {itemName: "Wedding Attire", quality: "rare", category: "Fashion - Fashion Packs"},
+    {itemName: "Whispering Caverns Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Wondrous Cog", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Wondrous Gadget", quality: "uncommon", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Wondrous Gizmo", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Wondrous Grommet", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Wondrous Sprocket", quality: "uncommon", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Wondrous Thingamabob", quality: "rare", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Yan-C-Bin's Artifact Pack", quality: "rare", category: "Refinement - Packs"}
+];
+
+function update() {
+    "use strict";
+    var i;
+    var text = document.getElementById("search").value.toLowerCase();
+    var rows = document.getElementById("table").rows;
+    for (i = 0; i < items.length; i += 1) {
+        if (items[i].itemName.search(text) === -1) {
+            rows[i + 1].style.display = "none";
+        } else {
+            rows[i + 1].removeAttribute("style");
+        }
+    }
+}
+
+function initialize() {
+    "use strict";
+    var i;
+    var table = document.getElementById("table");
+    var row;
+    var cell;
+    for (i = 0; i < items.length; i += 1) {
+        row = table.insertRow(table.rows.length);
+        cell = row.insertCell(0);
+        cell.innerHTML = "<a href=\"http://neverwinter.gamepedia.com/" + items[i].itemName.replace(/\ /g, "_") + "\">" + items[i].itemName + "</a>";
+        cell.className = "nowrap " + items[i].quality;
+        cell = row.insertCell(1);
+        cell.textContent = items[i].category;
+        items[i].itemName = items[i].itemName.toLowerCase();
+    }
+    update();
+}
+
+initialize();
+</script>
+</body>
+</html>
