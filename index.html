@@ -275,10 +275,14 @@ function initialize() {
     var table = document.getElementById("table");
     var row;
     var cell;
+    var link;
     for (i = 0; i < items.length; i += 1) {
         row = table.insertRow(table.rows.length);
         cell = row.insertCell(0);
-        cell.innerHTML = "<a href=\"http://neverwinter.gamepedia.com/" + items[i].itemName.replace(/\ /g, "_") + "\">" + items[i].itemName + "</a>";
+        link = document.createElement("a");
+        link.setAttribute("href", "http://neverwinter.gamepedia.com/" + items[i].itemName.replace(/\ /g, "_"));
+        link.textContent = items[i].itemName;
+        cell.appendChild(link);
         cell.className = "nowrap " + items[i].quality;
         cell = row.insertCell(1);
         cell.textContent = items[i].category;
