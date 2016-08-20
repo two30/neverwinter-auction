@@ -62,6 +62,7 @@ var items = [
     {itemName: "Chasm Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
     {itemName: "Codex of Companion Experience", quality: "uncommon", category: "Consumables - Utility Packs"},
     {itemName: "Coffer of Enchantments", quality: "uncommon", category: "Refinement - Packs"},
+    {itemName: "Coffer of Runestones", quality: "uncommon", category: "Refinement - Packs"},
     {itemName: "Companion Augmentation Pack", quality: "rare", category: "Refinement - Packs"},
     {itemName: "Companion Defense Boost", quality: "common", category: "Miscellaneous - Uncategorized"},
     {itemName: "Companion Ferocity Potion", quality: "common", category: "Miscellaneous - Uncategorized"},
@@ -107,6 +108,7 @@ var items = [
     {itemName: "Epic Dungeon Chest Key", quality: "quest", category: "Miscellaneous - Uncategorized"},
     {itemName: "Everlasting Water Bucket", quality: "rare", category: "Consumables - Novelty Items"},
     {itemName: "Favor of Tymora", quality: "uncommon", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Feywild Regalia", quality: "rare", category: "Fashion - Fashion Packs"},
     {itemName: "Fire-Aspected Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
     {itemName: "Firemane Companion Pack", quality: "rare", category: "Refinement - Packs"},
     {itemName: "Firemane Insignia Pack", quality: "epic", category: "Miscellaneous - Uncategorized"},
@@ -161,6 +163,7 @@ var items = [
     {itemName: "Major Treasures of Tyranny Voucher", quality: "epic", category: "Miscellaneous - Uncategorized"},
     {itemName: "Manticore Insignia Pack", quality: "epic", category: "Miscellaneous - Uncategorized"},
     {itemName: "Many-Arrows Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
+    {itemName: "Master's Trowel Box", quality: "epic", category: "Refinement - Packs"},
     {itemName: "Master's Trowel Box", quality: "epic", category: "Miscellaneous - Uncategorized"},
     {itemName: "Mount Hotenow Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
     {itemName: "Mysterious Chicken Egg", quality: "epic", category: "Companions - Packs"},
@@ -180,6 +183,7 @@ var items = [
     {itemName: "Poking Stick", quality: "uncommon", category: "Consumables - Novelty Items"},
     {itemName: "Priceless Thayan Antiquity", quality: "uncommon", category: "Miscellaneous - Treasure"},
     {itemName: "Professional Fireworks", quality: "common", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Professions Booster Pack", quality: "rare", category: "Professions - Profession Packs"},
     {itemName: "Professions Master Pack", quality: "rare", category: "Professions - Profession Packs"},
     {itemName: "Professions Special Pack", quality: "rare", category: "Professions - Profession Packs"},
     {itemName: "Rare Mount Pack", quality: "rare", category: "Miscellaneous - Uncategorized"},
@@ -203,6 +207,7 @@ var items = [
     {itemName: "Smouldering Satchel", quality: "uncommon", category: "Professions - Profession Packs"},
     {itemName: "Spectacular Lliira's Fireworks", quality: "common", category: "Consumables - Novelty Items"},
     {itemName: "Standard Dungeon Chest Key", quality: "quest", category: "Miscellaneous - Uncategorized"},
+    {itemName: "Steward's Incentive Package", quality: "rare", category: "Refinement - Packs"},
     {itemName: "Strongbox Key", quality: "epic", category: "Miscellaneous - Uncategorized"},
     {itemName: "Stronghold Chest of Campaigns", quality: "rare", category: "Professions - Profession Packs"},
     {itemName: "Stronghold Chest of Power", quality: "rare", category: "Professions - Profession Packs"},
@@ -228,6 +233,7 @@ var items = [
     {itemName: "Vellosk Treasure Cache", quality: "uncommon", category: "Equipment - Equipment Packs"},
     {itemName: "Wanderer's Artifact Weapon Pack", quality: "rare", category: "Refinement - Packs"},
     {itemName: "Warborn Gloves Pack", quality: "epic", category: "Equipment - Equipment Packs"},
+    {itemName: "Warborn Headwear Pack", quality: "epic", category: "Equipment - Equipment Packs"},
     {itemName: "Water-Aspected Strongbox of Enchantments", quality: "rare", category: "Refinement - Packs"},
     {itemName: "Water Seeker's Wand", quality: "rare", category: "Miscellaneous - Uncategorized"},
     {itemName: "Weaponsmith and Artificer Pack", quality: "rare", category: "Professions - Profession Packs"},
@@ -246,10 +252,10 @@ var items = [
 function update() {
     "use strict";
     var i;
-    var text = document.getElementById("search").value.toLowerCase();
+    var input = document.getElementById("search").value.toLowerCase();
     var rows = document.getElementById("table").rows;
     for (i = 0; i < items.length; i += 1) {
-        if (items[i].itemName.search(text) === -1) {
+        if (items[i].itemName.search(input) === -1) {
             rows[i + 1].style.display = "none";
         } else {
             rows[i + 1].removeAttribute("style");
