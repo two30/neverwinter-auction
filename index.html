@@ -311,6 +311,11 @@ function update() {
             rows[i + 1].removeAttribute("style");
         }
     }
+    if (input === "") {
+        history.replaceState(null, null, location.protocol + "//" + location.host + location.pathname);
+    } else {
+        history.replaceState(null, null, "?" + input);
+    }
 }
 
 function initialize() {
@@ -324,7 +329,7 @@ function initialize() {
         row = table.insertRow(table.rows.length);
         cell = row.insertCell(0);
         link = document.createElement("a");
-        link.setAttribute("href", "http://neverwinter.gamepedia.com/" + items[i].itemName.replace(/\ /g, "_"));
+        link.setAttribute("href", "http://neverwinter.gamepedia.com/" + items[i].itemName.replace(/\s/g, "_"));
         link.textContent = items[i].itemName;
         cell.appendChild(link);
         cell.className = "nowrap " + items[i].quality;
@@ -332,6 +337,7 @@ function initialize() {
         cell.textContent = items[i].category;
         items[i].itemName = items[i].itemName.toLowerCase();
     }
+    document.getElementById("search").value = location.search.slice(1);
     update();
 }
 
