@@ -304,10 +304,11 @@ var items = [
 
 function update() {
     "use strict";
-    var i;
     var input = document.getElementById("search").value.toLowerCase();
     var rows = document.getElementById("table").rows;
-    for (i = 0; i < items.length; i += 1) {
+    var i = items.length;
+    while (i > 0) {
+        i -= 1;
         if (items[i].itemName.search(input) === -1) {
             rows[i + 1].style.display = "none";
         } else {
@@ -323,12 +324,12 @@ function update() {
 
 function initialize() {
     "use strict";
-    var i;
     var table = document.getElementById("table");
     var row;
     var cell;
     var link;
-    for (i = 0; i < items.length; i += 1) {
+    var i = 0;
+    while (i < items.length) {
         row = table.insertRow(table.rows.length);
         cell = row.insertCell(0);
         link = document.createElement("a");
@@ -339,6 +340,7 @@ function initialize() {
         cell = row.insertCell(1);
         cell.textContent = items[i].category;
         items[i].itemName = items[i].itemName.toLowerCase();
+        i += 1;
     }
     document.getElementById("search").value = location.search.slice(1);
     update();
